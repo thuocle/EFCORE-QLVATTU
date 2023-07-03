@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
     <Folder Include="IServices\" />
     <Folder Include="Helper\" />
     <Folder Include="Services\" />
