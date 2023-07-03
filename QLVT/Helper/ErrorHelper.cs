@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QLVT.Helper
 {
-    internal class ErrorHelper
+    public class ErrorHelper
     {
     }
 }
