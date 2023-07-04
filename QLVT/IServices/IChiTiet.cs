@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QLVT.Helper
+namespace QLVT.IServices
 {
-    public class ErrorHelper
+    public interface IChiTiet
     {
-       
+        void ThemCTNhap();
+        void ThemCTXuat();
     }
 }
