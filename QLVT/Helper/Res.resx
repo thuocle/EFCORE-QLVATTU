@@ -141,6 +141,9 @@
   <data name="InputSTR" xml:space="preserve">
     <value>Nhap cac ky tu:</value>
   </data>
+  <data name="KhongDuHang" xml:space="preserve">
+    <value>Khong Du Hang de xuat!</value>
+  </data>
   <data name="ThanhCong" xml:space="preserve">
     <value>Thuc hien thanh cong!</value>
   </data>

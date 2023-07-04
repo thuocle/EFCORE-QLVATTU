@@ -133,6 +133,15 @@ namespace QLVT.Helper {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Khong Du Hang de xuat!.
+        /// </summary>
+        public static string KhongDuHang {
+            get {
+                return ResourceManager.GetString("KhongDuHang", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thuc hien thanh cong!.
         /// </summary>
         public static string ThanhCong {

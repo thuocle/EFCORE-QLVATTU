@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QLVT.Helper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,5 +17,17 @@ namespace QLVT.Entities
         public PhieuXuat PhieuXuat { get; set; }
         [Required]
         public int SoLuongXuat { get; set; }
+        public ChiTietPhieuXuat(inputType it)
+        {
+            if (it == inputType.ThemGT)
+            {
+                VatTuID = InputHelper.InputINT(Res.InputINT, Res.ErrINT);
+                SoLuongXuat = InputHelper.InputINT(Res.InputINT, Res.ErrINT);
+            }
+        }
+        public ChiTietPhieuXuat()
+        {
+
+        }
     }
 }

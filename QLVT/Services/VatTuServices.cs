@@ -34,63 +34,140 @@ namespace QLVT.Services
             {
                 Console.WriteLine($"{vt.TenVatTu} - {Res.HetHang}");
             }
+            Console.WriteLine("Hay nhap hang moi!");
+            ThemMoiPhieuNhap(new PhieuNhap());
         }
-        private void UpDateSL(int vattuID)
+        private void UpDateSLN(int ctpID)
         {
-            var vt = dbContext.VatTu.FirstOrDefault(x => x.VatTuID == vattuID);
-            var vtN = dbContext.ChiTietPhieuNhap.FirstOrDefault(x => x.VatTuID == vattuID);
-            var vtX = dbContext.ChiTietPhieuXuat.FirstOrDefault(x => x.VatTuID == vattuID);
-            if(vtN != null)
+           
+            var vtN = dbContext.ChiTietPhieuNhap.FirstOrDefault(x => x.ChiTietPhieuNhapID == ctpID);
+            var vt = dbContext.VatTu.FirstOrDefault(x => x.VatTuID == vtN.VatTuID);
+            if (vtN != null)
             {
                 vt.SoLuongTon += vtN.SoLuongNhap;
             }
-            else if(vtX != null)
+        } 
+        private void UpDateSLX(int ctpID)
+        {
+           
+            var vtX = dbContext.ChiTietPhieuXuat.FirstOrDefault(x => x.ChiTietPhieuXuatID == ctpID);
+            var vt = dbContext.VatTu.FirstOrDefault(x => x.VatTuID == vtX.VatTuID);
+            if (vtX != null)
             {
-                vt.SoLuongTon += vtX.SoLuongXuat;
+                vt.SoLuongTon -= vtX.SoLuongXuat;
             }
         }
         public void ThemMoiPhieuNhap(PhieuNhap n)
         {
-            if(dbContext.PhieuNhap.Any(x => x.MaPhieu == n.MaPhieu))
+            using (var trans = dbContext.Database.BeginTransaction())
             {
-                Console.WriteLine("Phieu nhap "+Res.DaTonTai);
-                return;
-            }
-            dbContext.Add(n);
-            dbContext.SaveChanges();
-            ChiTietPhieuNhap ctn = new ChiTietPhieuNhap();
-            ctn.PhieuNhapID = n.PhieuNhapID;
-            var vt = dbContext.VatTu.FirstOrDefault(x => x.VatTuID == ctn.VatTuID);
-            if (vt!=null)
-            {
-                dbContext.Add(ctn);
-                dbContext.SaveChanges();
-                UpDateSL(ctn.VatTuID);
-                dbContext.Update(vt); 
-                dbContext.SaveChanges();
-                Console.WriteLine(Res.ThanhCong);
-            }
-            else
-            {
-                Console.WriteLine(Res.ChuaTonTai + " Vat tu, ban can them vat tu vao danh sach Vat Tu!");
-                VatTu vatTu = new VatTu();
-                vatTu.VatTuID = ctn.VatTuID;
-                dbContext.Add(vatTu);
-                dbContext.Add(ctn);
-                dbContext.SaveChanges();
-                UpDateSL(ctn.VatTuID);
-                dbContext.Update(vatTu);
-                dbContext.SaveChanges();
-                Console.WriteLine(Res.ThanhCong);
-            }
+                try
+                {
+                    if (dbContext.PhieuNhap.Any(x => x.MaPhieu == n.MaPhieu))//kiem tra phieu nhap da ton tai 
+                    {
+                        Console.WriteLine("Phieu nhap " + Res.DaTonTai);
+                        return;
+                    }
+                    dbContext.Add(n);
+                    dbContext.SaveChanges();
+                    ChiTietPhieuNhap ctn = new ChiTietPhieuNhap(inputType.ThemGT);//co phieu nhap -> tao chi tiet phieu nhap
+                    ctn.PhieuNhapID = n.PhieuNhapID;
+                    var vt = dbContext.VatTu.FirstOrDefault(x => x.VatTuID == ctn.VatTuID);//Kiem tra phieu nhap
+                    if (vt != null)
+                    {
+                        dbContext.Add(ctn);
+                        dbContext.SaveChanges();
+                        UpDateSLN(ctn.ChiTietPhieuNhapID);
+                        dbContext.Update(vt);
+                        dbContext.SaveChanges();
+                        Console.WriteLine(Res.ThanhCong);
+                    }
+                    else
+                    {
+                        Console.WriteLine(Res.ChuaTonTai + " Vat tu, ban can them vat tu vao danh sach Vat Tu!");
+                        VatTu vatTu = new VatTu(inputType.ThemGT);//them vat tu moi
+                        dbContext.Add(vatTu);
+                        dbContext.SaveChanges();
 
+                        ctn.VatTuID = vatTu.VatTuID;// them chi tiet nhap
+                        dbContext.Add(ctn);
+                        dbContext.SaveChanges();
 
+                        UpDateSLN(ctn.ChiTietPhieuNhapID);// cap nhat so luong ton
+                        dbContext.Update(vatTu);
+                        dbContext.SaveChanges();
+                        Console.WriteLine(Res.ThanhCong);
+                    }
+                    trans.Commit();
+                }
+                catch (Exception)
+                {
+                    trans.Rollback();
+                    throw;
+                }
+            }
         }
 
 
-        public void ThemMoiPhieuXuat(PhieuXuat x)
+        public void ThemMoiPhieuXuat(PhieuXuat px)
         {
-            throw new NotImplementedException();
+            using (var trans = dbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (dbContext.PhieuXuat.Any(x => x.MaPhieu == px.MaPhieu))//kiem tra phieu xuat da ton tai 
+                    {
+                        Console.WriteLine("Phieu xuat " + Res.DaTonTai);
+                        return;
+                    }
+                    dbContext.Add(px);
+                    dbContext.SaveChanges();
+                    ChiTietPhieuXuat ctx = new ChiTietPhieuXuat(inputType.ThemGT);//co phieu xuat -> tao chi tiet phieu xuat
+                    ctx.PhieuXuatID = px.PhieuXuatID;
+                    var vt = dbContext.VatTu.FirstOrDefault(x => x.VatTuID == ctx.VatTuID);//Kiem tra phieu xuat
+
+                    if (vt != null)
+                    {
+                        if(vt.SoLuongTon > ctx.SoLuongXuat)
+                        {
+                            dbContext.Add(ctx);
+                            dbContext.SaveChanges();
+                            UpDateSLX(ctx.ChiTietPhieuXuatID);
+                            dbContext.Update(vt);
+                            dbContext.SaveChanges();
+                            Console.WriteLine(Res.ThanhCong);
+                        }
+                        else
+                            Console.WriteLine(vt.TenVatTu + " " + Res.KhongDuHang);
+                    }
+                    else
+                    {
+                        dbContext.SaveChanges();
+                        Console.WriteLine(Res.ChuaTonTai + " Vat tu, ban can them vat tu vao danh sach Vat Tu!");
+                        VatTu vatTu = new VatTu(inputType.ThemGT);//them vat tu moi
+                        dbContext.Add(vatTu);
+                        dbContext.SaveChanges();
+                        ctx.VatTuID = vatTu.VatTuID;// them chi tiet xuat
+                        if(vatTu.SoLuongTon > ctx.SoLuongXuat)//sl xuat ra phai < sl ton
+                        {
+                            dbContext.Add(ctx);
+                            dbContext.SaveChanges();
+                            UpDateSLX(ctx.ChiTietPhieuXuatID);// cap nhat so luong ton
+                            dbContext.Update(vatTu);
+                            dbContext.SaveChanges();
+                            Console.WriteLine(Res.ThanhCong);
+                        }
+                        else
+                            Console.WriteLine(vt.TenVatTu + " " + Res.KhongDuHang);
+                    }
+                    trans.Commit();
+                }
+                catch (Exception)
+                {
+                    trans.Rollback();
+                    throw;
+                }
+            }
         }
     }
 }

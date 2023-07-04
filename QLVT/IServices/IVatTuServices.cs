@@ -10,6 +10,6 @@ namespace QLVT.IServices
         void HienThiDSVatTuCanNhap();
         //Thêm mới phiếu nhập/xuất(Cần tự động cập nhật số lượng tồn kho của vật tư)
         void ThemMoiPhieuNhap(PhieuNhap n);
-        void ThemMoiPhieuXuat(PhieuXuat x);
+        void ThemMoiPhieuXuat(PhieuXuat px);
     }
 }
