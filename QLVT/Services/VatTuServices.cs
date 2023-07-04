@@ -35,7 +35,20 @@ namespace QLVT.Services
                 Console.WriteLine($"{vt.TenVatTu} - {Res.HetHang}");
             }
         }
-
+        private void UpDateSL(int vattuID)
+        {
+            var vt = dbContext.VatTu.FirstOrDefault(x => x.VatTuID == vattuID);
+            var vtN = dbContext.ChiTietPhieuNhap.FirstOrDefault(x => x.VatTuID == vattuID);
+            var vtX = dbContext.ChiTietPhieuXuat.FirstOrDefault(x => x.VatTuID == vattuID);
+            if(vtN != null)
+            {
+                vt.SoLuongTon += vtN.SoLuongNhap;
+            }
+            else if(vtX != null)
+            {
+                vt.SoLuongTon += vtX.SoLuongXuat;
+            }
+        }
         public void ThemMoiPhieuNhap(PhieuNhap n)
         {
             if(dbContext.PhieuNhap.Any(x => x.MaPhieu == n.MaPhieu))
@@ -47,9 +60,31 @@ namespace QLVT.Services
             dbContext.SaveChanges();
             ChiTietPhieuNhap ctn = new ChiTietPhieuNhap();
             ctn.PhieuNhapID = n.PhieuNhapID;
-            dbContext.Add(ctn); 
-            dbContext.SaveChanges();
-            Console.WriteLine(Res.ThanhCong);
+            var vt = dbContext.VatTu.FirstOrDefault(x => x.VatTuID == ctn.VatTuID);
+            if (vt!=null)
+            {
+                dbContext.Add(ctn);
+                dbContext.SaveChanges();
+                UpDateSL(ctn.VatTuID);
+                dbContext.Update(vt); 
+                dbContext.SaveChanges();
+                Console.WriteLine(Res.ThanhCong);
+            }
+            else
+            {
+                Console.WriteLine(Res.ChuaTonTai + " Vat tu, ban can them vat tu vao danh sach Vat Tu!");
+                VatTu vatTu = new VatTu();
+                vatTu.VatTuID = ctn.VatTuID;
+                dbContext.Add(vatTu);
+                dbContext.Add(ctn);
+                dbContext.SaveChanges();
+                UpDateSL(ctn.VatTuID);
+                dbContext.Update(vatTu);
+                dbContext.SaveChanges();
+                Console.WriteLine(Res.ThanhCong);
+            }
+
+
         }
 
 

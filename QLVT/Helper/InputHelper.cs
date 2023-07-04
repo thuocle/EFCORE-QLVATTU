@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace QLVT.Helper
 {
+    public enum inputType
+    {
+        ThemGT, ThemTT
+    }
     public class InputHelper
     {
         public static int InputINT(string msg, string err, int min = 0)
