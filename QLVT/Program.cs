@@ -5,5 +5,6 @@ void Main()
 {
     IVatTuServices vatTuServices = new VatTuServices();
     vatTuServices.HienThiDanhSachVatTu();
+    vatTuServices.HienThiDSVatTuCanNhap();
 }
 Main();

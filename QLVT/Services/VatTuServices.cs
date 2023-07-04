@@ -1,5 +1,6 @@
 ﻿using QLVT.Entities;
 using QLVT.IServices;
+using QLVT.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,15 +29,31 @@ namespace QLVT.Services
 
         public void HienThiDSVatTuCanNhap()
         {
-            throw new NotImplementedException();
+            var lstVT = dbContext.VatTu.Where(x=>x.SoLuongTon == 0).ToList();
+            foreach (var vt in lstVT)
+            {
+                Console.WriteLine($"{vt.TenVatTu} - {Res.HetHang}");
+            }
         }
 
-        public void ThemMoiPhieuNhap()
+        public void ThemMoiPhieuNhap(PhieuNhap n)
         {
-            throw new NotImplementedException();
+            if(dbContext.PhieuNhap.Any(x => x.MaPhieu == n.MaPhieu))
+            {
+                Console.WriteLine("Phieu nhap "+Res.DaTonTai);
+                return;
+            }
+            dbContext.Add(n);
+            dbContext.SaveChanges();
+            ChiTietPhieuNhap ctn = new ChiTietPhieuNhap();
+            ctn.PhieuNhapID = n.PhieuNhapID;
+            dbContext.Add(ctn); 
+            dbContext.SaveChanges();
+            Console.WriteLine(Res.ThanhCong);
         }
 
-        public void ThemMoiPhieuXuat()
+
+        public void ThemMoiPhieuXuat(PhieuXuat x)
         {
             throw new NotImplementedException();
         }

@@ -69,3 +69,5 @@ D:\Máy tính\EFCORE-SOLUTION\EFCORE-QLVATTU\QLVT\obj\Debug\net6.0\refint\QLVT.d
 D:\Máy tính\EFCORE-SOLUTION\EFCORE-QLVATTU\QLVT\obj\Debug\net6.0\QLVT.pdb
 D:\Máy tính\EFCORE-SOLUTION\EFCORE-QLVATTU\QLVT\obj\Debug\net6.0\QLVT.genruntimeconfig.cache
 D:\Máy tính\EFCORE-SOLUTION\EFCORE-QLVATTU\QLVT\obj\Debug\net6.0\ref\QLVT.dll
+D:\Máy tính\EFCORE-SOLUTION\EFCORE-QLVATTU\QLVT\obj\Debug\net6.0\QLVT.Helper.Res.resources
+D:\Máy tính\EFCORE-SOLUTION\EFCORE-QLVATTU\QLVT\obj\Debug\net6.0\QLVT.csproj.GenerateResource.cache

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace QLVT.Entities
         public VatTu VatTu { get; set; }    
         public int PhieuNhapID { get; set; }
         public PhieuNhap PhieuNhap { get; set; }
-
+        [Required]
         public int SoLuongNhap { get; set; }
 
     }
